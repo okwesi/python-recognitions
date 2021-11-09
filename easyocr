@@ -1,0 +1,38 @@
+# #INSTALL THE DEPENDENCIES
+# # #pip3 install torch torchvision torchaudio
+# # #pip install easy ocr
+# # #pip install translate
+# #
+
+import easyocr
+import cv2
+from matplotlib import pyplot as plt
+import numpy as np
+
+
+# image path on the local directory
+img_path = r""
+# img_path = "C:\Users\okwesi\Downloads\1.png"
+# print(img_path)
+reader = easyocr.Reader(['en'], gpu=False)
+result = reader.readtext(img_path , detail=1)
+# result = reader.readtext(npData)
+# print(result)
+# for i in range(0, len(result)):
+#     print(result[i])
+
+img = cv2.imread(img_path)
+for detection in result:
+    top_left = tuple([int(val) for val in detection [0][0]])
+    buttom_right = tuple([int(val) for val in detection [0][2]])
+    text = detection[1]
+    font  = cv2.FONT_HERSHEY_PLAIN
+    # the green rectangle around the text
+    img = cv2.rectangle(img, top_left, buttom_right, (0,255,0), 1)
+    # the text on top of the traingle
+    img = cv2.putText(img, text, top_left,  font, 1 ,(0,0,0), 1, cv2.LINE_AA)
+
+# matplotlib to show the image
+plt.figure(figsize=(20, 20))
+plt.imshow(img)
+plt.show()
